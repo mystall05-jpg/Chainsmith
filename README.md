@@ -9,7 +9,7 @@ constraints: machine selection, grid power cap, belt/pipe throughput, raw supply
 pollution ceilings, and tech tiers.
 
 **What makes it different:** True MILP (not heuristics). Machine-choice-honest power
-costs. Elastic infeasibility diagnostics that tell you *which* constraint is blocking
+costs. Elastic infeasibility diagnostics that tell you which constraint is blocking
 and by how much, rather than just "infeasible".
 
 **Interfaces:** CLI + Flask HTTP API with input validation, security headers, and
