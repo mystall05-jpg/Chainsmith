@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chainsmith</title>
+<style>
+  body { font-family: monospace; max-width: 800px; margin: 2em auto;
+         padding: 0 1em; background: #0a0e1a; color: #e2e8f0; }
+  h1 { color: #00d4ff; }
+  label { display: block; margin: 1em 0 0.3em; }
+  input, select { background: #080c1a; color: #e2e8f0;
+    border: 1px solid #1a1f35; padding: 0.5em; font-family: monospace;
+    width: 100%; box-sizing: border-box; }
+  button { background: #00d4ff; color: #0a0e1a; border: 0; padding: 0.8em 2em;
+    font-weight: bold; cursor: pointer; margin-top: 1em; }
+  pre { background: #080c1a; padding: 1em; border: 1px solid #1a1f35;
+    overflow-x: auto; font-size: 0.85em; }
+</style>
+</head>
+<body>
+<h1>⚙ Chainsmith</h1>
+<p>MILP factory optimizer — minimal UI.</p>
+<label>Target item: <input id="target" value="processing-unit"></label>
+<label>Target rate (items/sec): <input id="rate" type="number" value="1.0" step="0.1"></label>
+<label>Mode:
+  <select id="mode">
+    <option value="min_cost">Minimize cost</option>
+    <option value="max_yield">Maximize yield</option>
+  </select>
+</label>
+<label>Max power (MW): <input id="power" type="number" value="100"></label>
+<button onclick="solve()">Solve</button>
+<pre id="out">Ready.</pre>
+<script>
+async function solve() {
+  const body = {
+    mode: document.getElementById("mode").value,
+    target_item: document.getElementById("target").value,
+    target_rate: parseFloat(document.getElementById("rate").value),
+    max_power_mw: parseFloat(document.getElementById("power").value),
+  };
+  document.getElementById("out").textContent = "Solving...";
+  try {
+    const r = await fetch("/api/solve", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(body)
+    });
+    const data = await r.json();
+    document.getElementById("out").textContent = JSON.stringify(data, null, 2);
+  } catch (e) {
+    document.getElementById("out").textContent = "Error: " + e;
+  }
+}
+</script>
+</body>
+</html>
